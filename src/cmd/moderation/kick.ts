@@ -9,8 +9,7 @@ createCommand({
     description: "Kick a certain member.",
     usage: "<member> [reason]",
     permission: ["KICK_MEMBERS"],
-    execute: async (message, args) => {
-        if (!message.guild) return
+    execute: async (message, args, guild) => {
         if (!args[0]) return await message.send({embed: usageEmbed("kick", "<member> [reason]")})
         let member = message.mentionedMembers[0]
         if (!member) {
@@ -18,9 +17,8 @@ createCommand({
             if (!member) return await message.send("That's not a valid member.")
         }
         args.shift()
-        if (!message.guild) return
         if (!(await botHasPermission(message.guildID, ["KICK_MEMBERS"]))) return await message.send("I don't have enough permissions to kick this member.")
-        if ((await highestRole(message.guild.id, member.id) as any).position > (await highestRole(message.guildID, message.author.id) as any).position) return message.send("I can't kick this member since they have a higher role than you.")
+        if ((await highestRole(guild.id, member.id) as any).position > (await highestRole(message.guildID, message.author.id) as any).position) return message.send("I can't kick this member since they have a higher role than you.")
         await kick(message.guildID, member.id, (args[0] ? args.join(" ") : "No reason."))
         await message.send({content: `Successfuly kicked ${member.tag} for ${args[0] ? args.join(" ") : "No reason."}`, mentions: {parse: []}})
         let embed = new Embed()
@@ -29,6 +27,6 @@ createCommand({
             .addField("Kicked member:", `${member.tag}`)
             .addField("Reason:", args[0] ? args.join(" ") : "No reason.")
             .setTimestamp()
-        await log(embed, message.guild)
+        await log(embed, guild)
     }
 })

@@ -18,12 +18,12 @@ createCommand({
                 if (!args[0]) return await message.send({embed: usageEmbed("prefix set <prefix>")})
                 let prefix = args[0]
                 if (prefix.length > 5) return await message.send("The prefix' length should be lower than 5.")
-                if (!botcache.db.config.has(message.guildID)) botcache.db.config.create(message.guildID, {prefix, id: message.guildID})
+                if (!await botcache.db.config.has(message.guildID)) await botcache.db.config.create(message.guildID, {prefix, logs: "", muted: ""})
                 else await botcache.db.config.update(message.guildID, {prefix})
                 await message.send({content: `Successfuly set the prefix to ${prefix}`, mentions: {parse: []}})
                 break
             case "default":
-                await botcache.db.config.update(message.guildID, {prefix: undefined})
+                await botcache.db.config.update(message.guildID, {prefix: "."})
                 await message.send({content: `Successfuly set the prefix to ${settings.defaultPrefix}`, mentions: {parse: []}})
                 break
             default:

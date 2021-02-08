@@ -9,30 +9,29 @@ createCommand({
     permission: ["MANAGE_ROLES"],
     description: "Set up the muted role so you can start muting members!",
     usage: "set <role> | remove",
-    execute: async (message, args) => {
+    execute: async (message, args, guild) => {
         
-        if (!args[0]) return message.send({embed: usageEmbed("mutedrole set <role> | remove")})
-        if (!message.guild) return
+        if (!args[0]) return await message.send({embed: usageEmbed("mutedrole set <role> | remove")})
         let option = args.shift()
         switch (option) {
             case "set":
-                if (!args[0]) return message.send({embed: usageEmbed("mutedrole", "set <role>")})
+                if (!args[0]) return await message.send({embed: usageEmbed("mutedrole", "set <role>")})
                 let role = message.mentionedRoles[0]
                 if (!role) {
-                    role = message.guild.roles.find(e => e.id == args[0] || e.name == args[0] || e.mention == args[0])
-                    if (!role) return message.send("That's not an available role.")
+                    role = guild.roles.find(e => e.id == args[0] || e.name == args[0] || e.mention == args[0])
+                    if (!role) return await message.send("That's not an available role.")
                 }
                 let permissions = calculatePermissions(BigInt(role.permissions))
                 if (permissions.includes("SEND_MESSAGES")) return await message.send("You have to remove the send messages` permission from the muted role.")
                 if (!(await botHasPermission(message.guildID, ["MANAGE_ROLES"]))) return await message.send("You have to give the bot `manage roles` permission.")
                 if ((await highestRole(message.guildID, message.author.id))?.position as number < role.position) return await message.send("I can't set that role since it's higher than you!")
                 if ((await highestRole(message.guildID, botID))?.position as number < role.position) return await message.send("My role isn't high enough!")
-                if (!botcache.db.config.has(message.guildID)) botcache.db.config.create(message.guildID, {muted: role.id, id: message.guildID})
+                if (!await botcache.db.config.has(message.guildID)) await botcache.db.config.create(message.guildID, {muted: role.id, logs: "", prefix: "."})
                 else await botcache.db.config.update(message.guildID, {muted: role.id})
                 await message.send("Successfuly set the muted role!")
                 break
             case "remove":
-                if (!botcache.db.config.has(message.guildID)) return message.send("The log channel isn't set.")
+                if (!await botcache.db.config.has(message.guildID)) return await message.send("The log channel isn't set.")
                 else await botcache.db.config.update(message.guildID, {muted: undefined})
                 await message.send("Successfuly removed the muted role.")
                 break

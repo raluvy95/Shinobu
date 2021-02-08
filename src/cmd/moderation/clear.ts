@@ -10,8 +10,7 @@ createCommand({
     usage: "<amount>",
     description: "Clear a certain amount of messages in a channel.",
     permission: ["MANAGE_MESSAGES"],
-    execute: async (message, args) => {
-        if (!message.guild) return
+    execute: async (message, args, guild) => {
         if (!args[0]) return await message.send({embed:usageEmbed("clear", "<amount>")})
         if (isNaN(args[0] as any)) return await message.send("The amount has to be a number.")
         if (parseInt(args[0]) > 100) return await message.send("The amount has to be lower than 100")
@@ -28,6 +27,6 @@ createCommand({
             .addField("Cleared by:", message.member?.tag as string)
             .addField("Amount of messages cleared:", `${messages?.length} messages`)
             .setTimestamp()
-        await log(embed, message.guild)
+        await log(embed, guild)
     }
 })

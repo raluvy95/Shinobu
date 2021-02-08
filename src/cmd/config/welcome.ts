@@ -29,7 +29,7 @@ createCommand({
                     if (!channel) return await message.send("That's not an available channel.")
                 }
                 if (!(await botHasChannelPermissions(channel.id, ["SEND_MESSAGES"]))) return await message.send("You have to give the bot `send messages` permission on that channel.")
-                if (!botcache.db.welcome.has(message.guildID)) botcache.db.welcome.create(message.guildID, {channel: channel.id, id: message.guildID})
+                if (!await botcache.db.welcome.has(message.guildID)) botcache.db.welcome.create(message.guildID, {channel: channel.id, role: "", message: ""})
                 else await botcache.db.welcome.update(message.guildID, {channel: channel.id})
                 await message.send("Successfuly set the welcome channel!")
                 break
@@ -48,7 +48,7 @@ createCommand({
                 }
                 if ((await highestRole(message.guildID, message.author.id))?.position as number < role.position) return await message.send("I can't set that role since it's higher than you!")
                 if ((await highestRole(message.guildID, botID))?.position as number < role.position) return await message.send("My role isn't high enough!")
-                if (!botcache.db.welcome.has(message.guildID)) botcache.db.welcome.create(message.guildID, {channel: role.id,id: message.guildID})
+                if (!await botcache.db.welcome.has(message.guildID)) botcache.db.welcome.create(message.guildID, {role: role.id, channel: "", message: ""})
                 else await botcache.db.welcome.update(message.guildID, {role: role.id})
                 await message.send("Successfuly set the welcome role!")
                 break
@@ -62,7 +62,7 @@ createCommand({
                 }
                 let msg = args.join(" ")
                 if (!msg) return await message.send("You have to specify a message to send.")
-                if (!botcache.db.welcome.has(message.guildID)) botcache.db.welcome.create(message.guildID, {message: msg, id: message.guildID})
+                if (!await botcache.db.welcome.has(message.guildID)) botcache.db.welcome.create(message.guildID, {message: msg, channel: "", role: ""})
                 else await botcache.db.welcome.update(message.guildID, {message: msg})
                 await message.send(`Successfuly set the welcome message!`)
                 break
@@ -75,8 +75,8 @@ createCommand({
                 await message.send({embed})
                 break
             case "remove":
-                if (!botcache.db.welcome.has(message.guildID)) return message.send("You haven't configured the welcome settings yet.")
-                else botcache.db.welcome.delete(message.guildID)
+                if (!await botcache.db.welcome.has(message.guildID)) return message.send("You haven't configured the welcome settings yet.")
+                else await botcache.db.welcome.delete(message.guildID)
                 await message.send("Successfuly removed the welcome configurations.")
                 break
             default:

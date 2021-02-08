@@ -30,7 +30,7 @@ export let importDirectory =  async (path: string) => {
 }
 
 export let log = async (embed: Embed, guild: Guild) => {
-    if (!botcache.db.config.has(guild.id)) return
+    if (!await botcache.db.config.has(guild.id)) return
     let res = await botcache.db.config.get(guild.id) as config
     if (!res.logs) return
     let channel = guild.channels.get(res.logs)

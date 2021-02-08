@@ -9,11 +9,10 @@ createCommand({
     name:"serverinfo",
     module: "info",
     description: "Get the information of the server.",
-    execute: async (message) => {
+    execute: async (message, _, guild) => {
         if (!await botHasChannelPermissions(message.channelID, ["EMBED_LINKS"])) return await message.send("You have to give me `embed links` permission in this channel to use this command!")
         let created_at = await basic(await deconstruct(message.guildID))
-        let guild = message.guild
-        if (!guild) return
+
         let verification = ["None", "Low", "Medium", "High", "very High"][guild.verificationLevel]
         let icon = guild.iconURL() as string
         let features = guild.features.join(", ").replace(/_/g, " ").toLowerCase()

@@ -9,8 +9,8 @@ createCommand({
     name:"botinfo",
     module:"bot_information",
     description: "Get information about the bot.",
-    execute: async (message) => {
-        let member = message.guild?.members.find(e => e.id == botID) as Member
+    execute: async (message, _, guild) => {
+        let member = guild.members.find(e => e.id == botID) as Member
         let owner = `${(await getUser("445234723590242304")).username}#${(await getUser("445234723590242304")).discriminator}`
         let user = await getUser(botID)
         let smth = await deconstruct(botID)
@@ -23,7 +23,7 @@ createCommand({
             humans: humanCount,
             bots: botCount,
         }
-        let version = `Discordeno v10.0.2\nDeno v${Deno.version.deno}`
+        let version = `Discordeno v10.2.0\nDeno v${Deno.version.deno}`
         let support = "[You can join the support server by clicking here](https://discord.gg/VR2438D)"
         let botinvite = `[You can invite the bot by clicking here](https://discord.com/api/oauth2/authorize?client_id=${botID}&permissions=1914006726&scope=bot)`
         let created_at = await basic(smth)

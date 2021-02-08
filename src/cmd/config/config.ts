@@ -15,7 +15,7 @@ createCommand({
         let option = args.shift()
         switch (option) {
             case "show":
-                if (!botcache.db.config.has(message.guildID) && !botcache.db.welcome.has(message.guildID) && !botcache.db.goodbye.has(message.guildID)) {
+                if (!await botcache.db.config.has(message.guildID) && !await botcache.db.welcome.has(message.guildID) && !await botcache.db.goodbye.has(message.guildID)) {
                     await message.send("There is no configuration set for this server.")
                     break
                 }
@@ -41,7 +41,7 @@ createCommand({
                         message: "No message set."
                     }
                 }
-                if (botcache.db.goodbye.has(message.guildID)) {
+                if (await botcache.db.goodbye.has(message.guildID)) {
                     let goodbyeDB = await botcache.db.goodbye.get(message.guildID)
                     if (!goodbyeDB) break
                     let ch = message.guild?.channels.get(goodbyeDB.channel)
@@ -56,7 +56,7 @@ createCommand({
                         message: "No message set."
                     }
                 }
-                if (botcache.db.config.has(message.guildID)) {
+                if (await botcache.db.config.has(message.guildID)) {
                     let configDB = await botcache.db.config.get(message.guildID)
                     if (!configDB) break
                     let logs = message.guild?.channels.get(configDB.logs)
@@ -104,18 +104,18 @@ Goodbye message: ${goodbye.message}
                 break
             
             case "reset":
-                if (!botcache.db.config.has(message.guildID) && !botcache.db.welcome.has(message.guildID) && !botcache.db.goodbye.has(message.guildID)) {
+                if (!await botcache.db.config.has(message.guildID) && !botcache.db.welcome.has(message.guildID) && !botcache.db.goodbye.has(message.guildID)) {
                     await message.send("There is no configuration set for this server.")
                     break
                 }
-                if (botcache.db.welcome.has(message.guildID)) {
-                    botcache.db.welcome.delete(message.guildID)
+                if (await botcache.db.welcome.has(message.guildID)) {
+                    await botcache.db.welcome.delete(message.guildID)
                 }
-                if (botcache.db.goodbye.has(message.guildID)) {
-                    botcache.db.goodbye.delete(message.guildID)
+                if (await botcache.db.goodbye.has(message.guildID)) {
+                    await botcache.db.goodbye.delete(message.guildID)
                 }
-                if (botcache.db.config.has(message.guildID)) {
-                    botcache.db.config.delete(message.guildID)
+                if (await botcache.db.config.has(message.guildID)) {
+                    await botcache.db.config.delete(message.guildID)
                 }
                 await message.send("The configuration was successfuly reset.")
                 break

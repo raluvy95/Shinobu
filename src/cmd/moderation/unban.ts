@@ -9,8 +9,7 @@ createCommand({
     usage: "<member>",
     description: "Unban a banned member.",
     permission: ["BAN_MEMBERS"],
-    execute: async (message, args) => {
-        if (!message.guild) return
+    execute: async (message, args, guild) => {
         if (!args[0]) return await message.send({embed: usageEmbed("unban <member>")})
         let bannedMembers = await getBans(message.guildID)
         let bannedUser = bannedMembers.find(e => e.user.id == args[0] || e.user.username + e.user.discriminator == args[0])
