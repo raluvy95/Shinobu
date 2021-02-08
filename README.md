@@ -11,6 +11,7 @@
 **Usage guide:**
 - Install the code.
 - Go to settings.example.ts and change the token to your bot's token ( You can edit the 8ball answers and default prefix to your preferred settings. )
+- Rename settings.example.ts to settings.ts
 - Open your terminal or cmd.
 - Run ``deno run --allow-read --allow-net --allow-write --unstable mod.ts``
 - That's it, you're good to go!
