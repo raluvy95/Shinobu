@@ -16,6 +16,7 @@ createCommand({
             member = message.guild?.members.find(e => e.id == args.join(" ") || e.username == args.join(" ") || e.tag == args.join(" "))
             if (!member) return await message.send("That's not a valid member.")
         }
+        if(member.id == message.author.id) returm await message.send("You can't kick yourself")
         args.shift()
         if (!(await botHasPermission(message.guildID, ["KICK_MEMBERS"]))) return await message.send("I don't have enough permissions to kick this member.")
         if ((await highestRole(guild.id, member.id) as any).position > (await highestRole(message.guildID, message.author.id) as any).position) return message.send("I can't kick this member since they have a higher role than you.")
